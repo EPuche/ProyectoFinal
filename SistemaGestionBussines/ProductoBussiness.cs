@@ -1,35 +1,42 @@
-﻿using WepApiProyectoFinal.database;
-using WepApiProyectoFinal.models;
-using WepApiProyectoFinal.service;
+﻿using SistemaGestion.DTOs;
+using SistemaGestion.SistemaGestionEntities;
+using SistemaGestion.database;
+using SistemaGestion.SistemaGestionData;
 
 namespace SistemaGestion.SistemaGestionBussines
 {
-    public static class ProductoBussiness
+    public class ProductoBussiness
     {
-        public static List<Producto> ListarProductoBussines()
+        private ProductoData productoData;
+
+        public ProductoBussiness(ProductoData productoData)
         {
-            return ProductoData.ListarProducto();
+            this.productoData = productoData;
+        }
+        public  List<Producto> ListarProductoBussines()
+        {
+            return productoData.ListarProducto();
         }
 
-        public static Producto ObtenerProductoBussines(int id)
+        public  ProductoDTO ObtenerProductoBussines(int id)
         {
-            return ProductoData.ObtenerProducto(id);
+            return productoData.ObtenerProducto(id);
         }
 
-        public static bool CrearProductoBussines(Producto producto)
+        public  bool CrearProductoBussines(ProductoDTO producto)
         {
-            return ProductoData.CrearProducto(producto);
+            return productoData.CrearProducto(producto);
 
         }
 
-        public static bool ModificarProductoBussines(Producto producto, int id)
+        public  bool ModificarProductoBussines(ProductoDTO producto, int id)
         {
-            return ProductoData.ModificarProducto(producto, id);
+            return productoData.ModificarProductoPorId(producto, id);
         }
 
-        public static bool EliminarProductoBussines(int id)
+        public  bool EliminarProductoBussines(int id)
         {
-            return ProductoData.EliminarProducto(id);
+            return productoData.EliminarProducto(id);
         }
     }
 }

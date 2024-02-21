@@ -1,35 +1,41 @@
-﻿using Entregable2.service;
-using WepApiProyectoFinal.models;
-using WepApiProyectoFinal.service;
+﻿using SistemaGestion.DTOs;
+using SistemaGestion.SistemaGestionEntities;
+using SistemaGestion.SistemaGestionData;
 
 namespace SistemaGestion.SistemaGestionBussines
 {
     public class UsuarioBussiness
     {
-        public static List<Usuario> ListarUsuarioBussines()
+        private UsuarioData usuarioData;
+
+        public UsuarioBussiness(UsuarioData usuarioData)
         {
-            return UsuarioData.ListarUsuarios();
+            this.usuarioData = usuarioData;
+        }
+        public  List<Usuario> ListarUsuarioBussines()
+        {
+            return usuarioData.ListarUsuarios();
         }
 
-        public static Usuario ObtenerUsuarioBussines(int id)
+        public  Usuario ObtenerUsuarioBussines(int id)
         {
-            return UsuarioData.ObtenerUsuario(id);
+            return usuarioData.ObtenerUsuario(id);
         }
 
-        public static bool CrearUsuarioBussines(Usuario usuario)
+        public  bool CrearUsuarioBussines(UsuarioDTO usuario)
         {
-            return UsuarioData.CrearUsuario(usuario);
+            return usuarioData.CrearUsuario(usuario);
 
         }
 
-        public static bool ModificarUsuarioBussines(Usuario usuario, int id)
+        public  bool ModificarUsuarioBussines(UsuarioDTO usuario, int id)
         {
-            return UsuarioData.ModificarUsuario(usuario, id);
+            return usuarioData.ModificarUsuario(usuario, id);
         }
 
-        public static bool EliminarUsuarioBussines(int id)
+        public  bool EliminarUsuarioBussines(int id)
         {
-            return UsuarioData.EliminarUsuario(id);
+            return usuarioData.EliminarUsuario(id);
         }
     }
 }

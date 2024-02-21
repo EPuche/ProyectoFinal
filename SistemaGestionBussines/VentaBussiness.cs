@@ -1,35 +1,41 @@
-﻿using Entregable2.service;
-using WepApiProyectoFinal.models;
-using WepApiProyectoFinal.service;
+﻿using SistemaGestion.SistemaGestionEntities;
+using SistemaGestion.SistemaGestionData;
+using SistemaGestion.DTOs;
 
 namespace SistemaGestion.SistemaGestionBussines
 {
     public class VentaBussiness
     {
-        public static List<Venta> ListarVentaBussines()
+        private VentaData ventaData;
+
+        public VentaBussiness(VentaData ventaData)
         {
-            return VentaData.ListarVentas();
+            this.ventaData = ventaData;
+        }
+        public  List<Venta> ListarVentaBussines()
+        {
+            return ventaData.ListarVentas();
         }
 
-        public static Venta ObtenerVentaBussines(int id)
+        public  Venta ObtenerVentaBussines(int id)
         {
-            return VentaData.ObtenerVenta(id);
+            return ventaData.ObtenerVenta(id);
         }
 
-        public static bool CrearVentaBussines(Venta venta)
+        public  bool CrearVentaBussines(int idusuario, List<ProductoDTO> productos)
         {
-            return VentaData.CrearVenta(venta);
+            return ventaData.CrearVenta(idusuario,productos);
 
         }
 
-        public static bool ModificarVentaBussines(Venta venta, int id)
+        public bool ModificarVentaBussines(Venta venta, int id)
         {
-            return VentaData.ModificarVenta(venta, id);
+            return ventaData.ModificarVenta(venta, id);
         }
 
-        public static bool EliminarVentaBussines(int id)
+        public  bool EliminarVentaBussines(int id)
         {
-            return VentaData.EliminarVenta(id);
+            return ventaData.EliminarVenta(id);
         }
     }
 }

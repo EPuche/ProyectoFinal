@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WepApiProyectoFinal.models
+namespace SistemaGestion.SistemaGestionEntities
 {
     public partial class Venta
     {

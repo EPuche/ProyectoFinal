@@ -1,82 +1,105 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SistemaGestion.DTOs;
+using SistemaGestion.Mapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WepApiProyectoFinal.database;
-using WepApiProyectoFinal.models;
+using SistemaGestion.database;
+using SistemaGestion.SistemaGestionEntities;
 
-namespace WepApiProyectoFinal.service
+namespace SistemaGestion.SistemaGestionData
 {
-    public static class ProductoData
+    public  class ProductoData
     {
-        public static List<Producto> ListarProducto()
+        private SistemaGestionContext context;
+        public ProductoData(SistemaGestionContext coderContext)
         {
-            using (SistemaGestionContext context = new SistemaGestionContext())
-            {
+            this.context = coderContext;
 
-                List<Producto> productos = context.Productos.ToList();
+        }
+        public  List<Producto> ListarProducto()
+        {
+
+
+                List<Producto> productos = this.context.Productos.ToList();
 
                 return productos;
 
-            }
         }
 
-        public static Producto ObtenerProducto(int id)
+        public  ProductoDTO ObtenerProducto(int id)
         {
-            using (SistemaGestionContext context = new SistemaGestionContext())
-            {
-
-                Producto? productoBuscado = context.Productos.Where(p => p.Id == id).FirstOrDefault();
-                return productoBuscado;
-            }
+            
+            Producto? productoBuscado = this.context.Productos.Where(p => p.Id == id).FirstOrDefault();
+            ProductoDTO producto = ProductoMapper.MapearADTO(productoBuscado);
+            return producto;
         }
 
-        public static bool CrearProducto(Producto producto)
+        public bool CrearProducto(ProductoDTO producto)
         {
-            using (SistemaGestionContext context = new SistemaGestionContext())
-            {
-                context.Productos.Add(producto);
-                context.SaveChanges();
-                return true;
-            }
+            Producto p = ProductoMapper.MapearAProducto(producto);    
 
-
+            this.context.Productos.Add(p);
+            this.context.SaveChanges();
+            return true;
+            
         }
 
-        public static bool ModificarProducto(Producto producto, int id)
+        public  bool ModificarProductoPorId(ProductoDTO producto, int id)
         {
-            using (SistemaGestionContext context = new SistemaGestionContext())
+
+            Producto? productoBuscado = this.context.Productos.Where(p => p.Id == id).FirstOrDefault();
+
+            if (productoBuscado is not null) 
             {
-                Producto? usuarioProducto = ObtenerProducto(id);
+                productoBuscado.Description = producto.Description;
+                productoBuscado.Cost = producto.Cost;
+                productoBuscado.SalePrice = producto.SalePrice;
+                productoBuscado.Stock = producto.Stock;
 
-                usuarioProducto.Description = producto.Description;
-                usuarioProducto.Cost = producto.Cost;
-                usuarioProducto.SalePrice = producto.SalePrice;
-                usuarioProducto.Stock = producto.Stock;
+                this.context.Productos.Update(productoBuscado);
 
-                context.Productos.Update(usuarioProducto);
-
-                context.SaveChanges();
+                this.context.SaveChanges();
 
                 return true;
             }
+            return false;
         }
 
-        public static bool EliminarProducto(int id)
+        
+        public bool ActualizarProducto(ProductoDTO productoAct)
         {
-            using (SistemaGestionContext context = new SistemaGestionContext())
+            Producto? productoBuscado = this.context.Productos.Where(p => p.Id == productoAct.Id).FirstOrDefault();
+            if (productoAct is not null)
             {
+                productoBuscado.Description = productoAct.Description;
+                productoBuscado.Cost = productoAct.Cost;
+                productoBuscado.SalePrice = productoAct.SalePrice;
+                productoBuscado.Stock = productoAct.Stock;
+
+                this.context.Productos.Update(productoBuscado);
+
+                this.context.SaveChanges();
+
+                return true;
+            }
+            return false;
+        }
+
+        public  bool EliminarProducto(int id)
+        {
+            
                 Producto productoAEliminar = context.Productos.Include(p => p.ProductoVendidos).Where(p => p.Id == id).FirstOrDefault();
 
                 if (productoAEliminar is not null)
                 {
-                    context.Productos.Remove(productoAEliminar);
-                    context.SaveChanges();
+                    this.context.Productos.Remove(productoAEliminar);
+                    this.context.SaveChanges();
                     return true;
                 }
-            }
+            
 
             return false;
         }

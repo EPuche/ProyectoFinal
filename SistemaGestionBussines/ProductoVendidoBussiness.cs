@@ -1,35 +1,41 @@
-﻿using Entregable2.service;
-using WepApiProyectoFinal.models;
-using WepApiProyectoFinal.service;
+﻿using SistemaGestion.SistemaGestionEntities;
+using SistemaGestion.SistemaGestionData;
+using SistemaGestion.DTOs;
 
 namespace SistemaGestion.SistemaGestionBussines
 {
     public class ProductoVendidoBussiness
     {
-        public static List<ProductoVendido> ListarProductoVendidoBussines()
+        private ProductoVendidoData productoVendidoData;
+
+        public ProductoVendidoBussiness(ProductoVendidoData productoVendidoData)
         {
-            return ProductoVendidoData.ListarProductoVendido();
+            this.productoVendidoData = productoVendidoData;
+        }
+        public  List<ProductoVendido> ListarProductoVendidoBussines()
+        {
+            return productoVendidoData.ListarProductoVendido();
         }
 
-        public static ProductoVendido ObtenerProductoBussines(int id)
+        public  ProductoVendido ObtenerProductoBussines(int id)
         {
-            return ProductoVendidoData.ObtenerProductoVendido(id);
+            return productoVendidoData.ObtenerProductoVendido(id);
         }
 
-        public static bool CrearProductoBussines(ProductoVendido producto)
+        public  void CrearProductoBussines(ProductoVendidoDTO producto)
         {
-            return ProductoVendidoData.CrearProductoVendido(producto);
+            productoVendidoData.CrearProductoVendido(producto);
 
         }
 
-        public static bool ModificarProductoBussines(ProductoVendido producto, int id)
+        public bool ModificarProductoBussines(ProductoVendido producto, int id)
         {
-            return ProductoVendidoData.ModificarProducto(producto, id);
+            return productoVendidoData.ModificarProducto(producto, id);
         }
 
-        public static bool EliminarProductoBussines(int id)
+        public bool EliminarProductoBussines(int id)
         {
-            return ProductoVendidoData.EliminarProductoVendido(id);
+            return productoVendidoData.EliminarProductoVendido(id);
         }
     }
 }

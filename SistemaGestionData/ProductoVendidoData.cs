@@ -4,51 +4,50 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WepApiProyectoFinal.database;
-using WepApiProyectoFinal.models;
+using SistemaGestion.database;
+using SistemaGestion.SistemaGestionEntities;
+using SistemaGestion.DTOs;
+using SistemaGestion.Mapper;
 
-namespace Entregable2.service
+namespace SistemaGestion.SistemaGestionData
 {
-    public static class ProductoVendidoData
+    public  class ProductoVendidoData
     {
-        public static List<ProductoVendido> ListarProductoVendido()
+        private SistemaGestionContext context;
+        public ProductoVendidoData(SistemaGestionContext coderContext)
         {
-            using (SistemaGestionContext context = new SistemaGestionContext())
-            {
+            this.context = coderContext;
+
+        }
+        public  List<ProductoVendido> ListarProductoVendido()
+        {
 
                 List<ProductoVendido> productosVendidos = context.ProductoVendidos.ToList();
 
                 return productosVendidos;
 
-            }
         }
 
-        public static ProductoVendido ObtenerProductoVendido(int id)
+        public  ProductoVendido ObtenerProductoVendido(int id)
         {
-            using (SistemaGestionContext context = new SistemaGestionContext())
-            {
-
+         
                 ProductoVendido? productoVendidoBuscado = context.ProductoVendidos.Where(p => p.Id == id).FirstOrDefault();
                 return productoVendidoBuscado;
-            }
-        }
-
-        public static bool CrearProductoVendido(ProductoVendido productoVendido)
-        {
-            using (SistemaGestionContext context = new SistemaGestionContext())
-            {
-                context.ProductoVendidos.Add(productoVendido);
-                context.SaveChanges();
-                return true;
-            }
-
 
         }
 
-        public static bool ModificarProducto(ProductoVendido productoVendido, int id)
+        public  void CrearProductoVendido(ProductoVendidoDTO productoVendidoDTO)
         {
-            using (SistemaGestionContext context = new SistemaGestionContext())
-            {
+            ProductoVendido productoVendido = ProductoVendidoMapper.MapearAProducto(productoVendidoDTO);    
+
+            context.ProductoVendidos.Add(productoVendido);
+            context.SaveChanges();
+
+        }
+
+        public  bool ModificarProducto(ProductoVendido productoVendido, int id)
+        {
+            
                 ProductoVendido? usuarioProductoVend = ObtenerProductoVendido(id);
 
                 usuarioProductoVend.Stock = productoVendido.Stock;
@@ -58,13 +57,12 @@ namespace Entregable2.service
                 context.SaveChanges();
 
                 return true;
-            }
+
         }
 
-        public static bool EliminarProductoVendido(int id)
+        public  bool EliminarProductoVendido(int id)
         {
-            using (SistemaGestionContext context = new SistemaGestionContext())
-            {
+
                 ProductoVendido productoVendAEliminar = context.ProductoVendidos.Where(p => p.Id == id).FirstOrDefault();
 
                 if (productoVendAEliminar is not null)
@@ -73,7 +71,7 @@ namespace Entregable2.service
                     context.SaveChanges();
                     return true;
                 }
-            }
+
 
             return false;
         }
