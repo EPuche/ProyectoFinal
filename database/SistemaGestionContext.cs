@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
-using WepApiProyectoFinal.models;
+using SistemaGestion.SistemaGestionData;
+using SistemaGestion.SistemaGestionEntities;
 
-namespace WepApiProyectoFinal.database
+
+namespace SistemaGestion.database
 {
     public partial class SistemaGestionContext : DbContext
     {
@@ -22,14 +24,7 @@ namespace WepApiProyectoFinal.database
         public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
         public virtual DbSet<Venta> Venta { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=. ; Database=coderhouse ; Trusted_Connection=True;");
-            }
-        }
+      
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
