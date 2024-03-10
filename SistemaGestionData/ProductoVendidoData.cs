@@ -19,12 +19,36 @@ namespace SistemaGestion.SistemaGestionData
             this.context = coderContext;
 
         }
-        public  List<ProductoVendido> ListarProductoVendido()
+
+        public List<ProductoVendido> ObtenerProductosVendidosPorIdUsuario(int userId)
+        {
+            List<Producto> productos = this.ListarProducto();
+
+
+            List<Producto> productosFiltrados = productos.Where(q=> q.UserId == userId).ToList();
+
+
+            List<ProductoVendido> resultadoFinal = new List<ProductoVendido>();
+            List<ProductoVendido> productosVendidos = this.context.ProductoVendidos.ToList();
+            foreach (Producto p in productosFiltrados)
+            {
+                int id = p.Id;
+                ProductoVendido? pVendido = productosVendidos.Find(p => p.ProductId == id);
+
+                if (pVendido is not null)
+                {
+                    resultadoFinal.Add(pVendido);
+                }
+            }
+            
+            return resultadoFinal;
+        }
+
+        public List<Producto> ListarProducto()
         {
 
-                List<ProductoVendido> productosVendidos = context.ProductoVendidos.ToList();
 
-                return productosVendidos;
+            return this.context.Productos.ToList<Producto>();
 
         }
 

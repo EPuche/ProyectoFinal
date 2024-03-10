@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SistemaGestion.SistemaGestionData;
+using SistemaGestion.SistemaGestionEntities;
 
 namespace SistemaGestion.Controllers
 {
@@ -13,9 +14,13 @@ namespace SistemaGestion.Controllers
         {
             this.productoVendidoData = productoVendidoData;
         }
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+
+        [HttpGet("{userID}")]
+        public ActionResult<List<ProductoVendido>> TraerProductosVendidos(int userId)
+        {
+            return productoVendidoData.ObtenerProductosVendidosPorIdUsuario(userId);
+        }
+
+        
     }
 }

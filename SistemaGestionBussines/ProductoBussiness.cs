@@ -29,9 +29,9 @@ namespace SistemaGestion.SistemaGestionBussines
 
         }
 
-        public  bool ModificarProductoBussines(ProductoDTO producto, int id)
+        public  bool ModificarProductoBussines(ProductoDTO producto)
         {
-            return productoData.ModificarProductoPorId(producto, id);
+            return productoData.ModificarProductoPorId(producto);
         }
 
         public  bool EliminarProductoBussines(int id)

@@ -17,9 +17,9 @@ namespace SistemaGestion.SistemaGestionBussines
             return usuarioData.ListarUsuarios();
         }
 
-        public  Usuario ObtenerUsuarioBussines(int id)
+        public  UsuarioDTO ObtenerUsuarioBussines(string user)
         {
-            return usuarioData.ObtenerUsuario(id);
+            return usuarioData.ObtenerUsuario(user);
         }
 
         public  bool CrearUsuarioBussines(UsuarioDTO usuario)

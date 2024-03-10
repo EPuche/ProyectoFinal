@@ -28,13 +28,30 @@ namespace SistemaGestion.SistemaGestionData
                 return usuarios;
         }
 
-        public  Usuario ObtenerUsuario(int id)
+        public  UsuarioDTO ObtenerUsuario(string userName)
         {
             
 
-                Usuario? usuarioBuscado = this.context.Usuarios.Where(u => u.Id == id).FirstOrDefault();
-                return usuarioBuscado;
+                Usuario? usuarioBuscado = this.context.Usuarios.Where(u => u.UserName == userName).FirstOrDefault();
+                UsuarioDTO usuarioDTO = UsuarioMapper.MapearADTO(usuarioBuscado);
+                return usuarioDTO;
             
+        }
+
+        public UsuarioDTO ObtenerUsuarioPorPassword(string userName, string password)
+        {
+
+
+            Usuario? usuarioBuscado = this.context.Usuarios.Where(u => u.UserName == userName).FirstOrDefault();
+            UsuarioDTO usuarioDTO = UsuarioMapper.MapearADTO(usuarioBuscado);
+            if (usuarioDTO.Password == password)
+            {
+                return usuarioDTO;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public  bool CrearUsuario(UsuarioDTO usuario)
@@ -82,7 +99,7 @@ namespace SistemaGestion.SistemaGestionData
                 }
             
 
-            return false;
+                return false;
         }
 
     }

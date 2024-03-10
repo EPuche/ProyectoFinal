@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SistemaGestion.DTOs;
 using SistemaGestion.SistemaGestionData;
+using SistemaGestion.SistemaGestionEntities;
 using System.Net;
 
 namespace SistemaGestion.Controllers
@@ -40,5 +41,31 @@ namespace SistemaGestion.Controllers
             }
         }
 
+        [HttpDelete ("{idventa}")]
+
+        public IActionResult EliminarVenta(int idventa, [FromBody] List<ProductoDTO> productos) 
+        {
+            try 
+            {
+                this.ventaData.EliminarVenta(idventa,productos);
+                IActionResult result = base.Ok(new
+                {
+                    mensage = "Venta eliminada con exito",
+                    status = HttpStatusCode.NoContent
+                });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return base.Conflict(new { mensage = ex.Message, status = HttpStatusCode.Conflict });
+            }
+        }
+
+        [HttpGet]
+
+        public List<Venta> TraerVentas()
+        {
+            return this.ventaData.ListarVentas();
+        }
     }
 }

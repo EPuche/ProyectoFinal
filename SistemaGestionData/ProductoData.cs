@@ -19,11 +19,19 @@ namespace SistemaGestion.SistemaGestionData
             this.context = coderContext;
 
         }
-        public  List<Producto> ListarProducto()
+
+        public List<Producto> ListarProducto()
         {
 
 
-                List<Producto> productos = this.context.Productos.ToList();
+            return this.context.Productos.ToList<Producto>();
+
+        }
+        public  List<Producto> ListarProductoPorIdUsuario(int userId)
+        {
+
+
+                List<Producto> productos = this.context.Productos.Where(p => p.UserId == userId).ToList();
 
                 return productos;
 
@@ -47,10 +55,10 @@ namespace SistemaGestion.SistemaGestionData
             
         }
 
-        public  bool ModificarProductoPorId(ProductoDTO producto, int id)
+        public  bool ModificarProductoPorId(ProductoDTO producto)
         {
 
-            Producto? productoBuscado = this.context.Productos.Where(p => p.Id == id).FirstOrDefault();
+            Producto? productoBuscado = this.context.Productos.Where(p => p.Description == producto.Description).FirstOrDefault();
 
             if (productoBuscado is not null) 
             {

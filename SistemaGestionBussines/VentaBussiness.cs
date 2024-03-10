@@ -33,9 +33,9 @@ namespace SistemaGestion.SistemaGestionBussines
             return ventaData.ModificarVenta(venta, id);
         }
 
-        public  bool EliminarVentaBussines(int id)
+        public  bool EliminarVentaBussines(int id, List<ProductoDTO> productos)
         {
-            return ventaData.EliminarVenta(id);
+            return ventaData.EliminarVenta(id, productos);
         }
     }
 }

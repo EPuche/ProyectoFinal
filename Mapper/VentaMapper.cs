@@ -2,6 +2,7 @@
 using SistemaGestion.SistemaGestionData;
 using SistemaGestion.SistemaGestionEntities;
 
+
 namespace SistemaGestion.Mapper
 {
     public class VentaMapper
@@ -27,5 +28,6 @@ namespace SistemaGestion.Mapper
             return dto;
 
         }
+
     }
 }

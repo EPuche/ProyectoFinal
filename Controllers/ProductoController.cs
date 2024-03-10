@@ -2,6 +2,7 @@
 using SistemaGestion.DTOs;
 using SistemaGestion.SistemaGestionData;
 using SistemaGestion.SistemaGestionEntities;
+using System.Net;
 
 namespace SistemaGestion.Controllers
 {
@@ -16,57 +17,80 @@ namespace SistemaGestion.Controllers
             this.productoData = productoData;
         }
 
-        [HttpGet]
-        public ActionResult <List<Producto>> ObtenerTodosLosProductos()
-        {
-            return productoData.ListarProducto();
-        }
-
+        
         [HttpPost]
         public IActionResult AgregarUnNuevoProducto([FromBody] ProductoDTO producto)
         {
 
-            if (this.productoData.CrearProducto(producto))
+            try
             {
-
-                return base.Ok(new { mensaje = "Producto agregado", producto });
-            }
-            else
-            {
-                return base.Conflict(new { mensaje = "No se pudo agregar el producto" });
-            }
-        }
-
-        [HttpPut("{id}")]
-
-        public IActionResult ModificarProducto(ProductoDTO productoDTO, int id)
-        {
-            if (id > 0)
-            {
-                if (this.productoData.ModificarProductoPorId(productoDTO, id))
+                this.productoData.CrearProducto(producto);
+                IActionResult result = base.Ok(new
                 {
-                    return base.Ok(new { message = "Producto actualizado", status = 200 });
-                }
-                return base.Conflict(new { message = "No se pudo actualizar el usuario" });
+                    mensage = "Producto creado con exito",
+                    productoNuevo = producto,
+                    status = HttpStatusCode.Created
+                }); 
+                return result;
+
             }
-
-            return base.BadRequest(new { message = "El id no puede ser negativo", status = 400 });
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult BorrarProducto(int id)
-        {
-            if (id > 0)
+            catch (Exception ex) 
             {
-                if (this.productoData.EliminarProducto(id))
-                {
-                    return base.Ok(new { mensaje = "Producto borrado", status = 200 });
-                }
-
-                return base.Conflict(new { mensaje = "No se pudo borrar el producto" });
-
+                return base.Conflict(new { mensage = ex.Message, StatusCode = HttpStatusCode.Conflict });
             }
-            return base.BadRequest(new { status = 400, mensaje = "El id no puede ser negativo" });
         }
+
+        [HttpPut]
+
+        public IActionResult ModificarProducto([FromBody] ProductoDTO productoDTO)
+        {
+            try
+            {
+                this.productoData.ActualizarProducto(productoDTO);
+                IActionResult result = base.Accepted(new
+                {
+                    mensage="Producto actualizado con exito",
+                    nuevoProducto=productoDTO,
+                    status = HttpStatusCode.Accepted
+                });
+                return result;
+            }
+            catch (Exception ex) 
+            {
+                return base.Conflict(new { mensage = ex.Message, StatusCode = HttpStatusCode.Conflict });
+            }
+        }
+
+        [HttpDelete("{idProducto}")]
+        public IActionResult BorrarProducto(int idProducto)
+        {
+            if (idProducto < 0)
+            {
+                return base.BadRequest(new { status = HttpStatusCode.BadRequest, mensaje = "El id no puede ser negativo" });
+                 
+            }
+
+            try
+            {
+                this.productoData.EliminarProducto(idProducto);
+                IActionResult result = base.Ok(new
+                {
+                    mensage = "Producto borrado con exito",
+                    status = HttpStatusCode.Accepted
+                });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return base.Conflict(new { status = HttpStatusCode.Conflict, mensaje = ex.Message });
+            }
+        }
+
+        [HttpGet("{idusuario}")]
+        public List<Producto> TraerProductos(int idusuario)
+        {
+            return this.productoData.ListarProductoPorIdUsuario(idusuario);
+        }
+
     }
 }

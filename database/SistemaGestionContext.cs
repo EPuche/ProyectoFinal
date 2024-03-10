@@ -41,7 +41,7 @@ namespace SistemaGestion.database
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Productos)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Producto_Usuario");
             });
 
@@ -52,13 +52,13 @@ namespace SistemaGestion.database
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.ProductoVendidos)
                     .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ProductoVendido_Producto");
 
                 entity.HasOne(d => d.Sale)
                     .WithMany(p => p.ProductoVendidos)
                     .HasForeignKey(d => d.SaleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ProductoVendido_Venta");
             });
 
@@ -84,7 +84,7 @@ namespace SistemaGestion.database
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Venta)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Venta_Usuario");
             });
 

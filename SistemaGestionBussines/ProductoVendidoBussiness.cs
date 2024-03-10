@@ -12,9 +12,9 @@ namespace SistemaGestion.SistemaGestionBussines
         {
             this.productoVendidoData = productoVendidoData;
         }
-        public  List<ProductoVendido> ListarProductoVendidoBussines()
+        public  List<ProductoVendido> ListarProductoVendidoBussines(int userID)
         {
-            return productoVendidoData.ListarProductoVendido();
+            return productoVendidoData.ObtenerProductosVendidosPorIdUsuario(userID);
         }
 
         public  ProductoVendido ObtenerProductoBussines(int id)

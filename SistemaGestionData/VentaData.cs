@@ -61,7 +61,7 @@ namespace SistemaGestion.SistemaGestionData
 
             this.MarcarVendidos(productos, venta.Id);
 
-            this.ActualizarStock(productos);
+            this.ActualizarStock(productos, 0);
 
             return true;
 
@@ -82,27 +82,63 @@ namespace SistemaGestion.SistemaGestionData
                 context.SaveChanges();
             });
         }
-        private void ActualizarStock(List<ProductoDTO> productos)
+        private void ActualizarStock(List<ProductoDTO> productos, int op) //op es 0 si es agregar venta o 1 si es eliminar venta
         {
-            productos.ForEach(p =>
+            if (op == 0)
             {
-                Producto? productoBuscado = this.context.Productos.Where(pr => pr.Id == p.Id).FirstOrDefault();
-                ProductoDTO productoAct = ProductoMapper.MapearADTO(productoBuscado);
-                productoAct.Stock -= p.Stock;
-
-                Producto? producto = this.context.Productos.Where(pre => pre.Id == productoAct.Id).FirstOrDefault();
-                if (productoAct is not null)
+                productos.ForEach(p =>
                 {
-                    producto.Description = productoAct.Description;
-                    producto.Cost = productoAct.Cost;
-                    producto.SalePrice = productoAct.SalePrice;
-                    producto.Stock = productoAct.Stock;
+                    Producto? productoBuscado = this.context.Productos.Where(pr => pr.Id == p.Id).FirstOrDefault();
+                    ProductoDTO productoAct = ProductoMapper.MapearADTO(productoBuscado);
+                    productoAct.Stock -= p.Stock;
 
-                    this.context.Productos.Update(productoBuscado);
+                    Producto? producto = this.context.Productos.Where(pre => pre.Id == productoAct.Id).FirstOrDefault();
+                    if (productoAct is not null)
+                    {
+                        producto.Description = productoAct.Description;
+                        producto.Cost = productoAct.Cost;
+                        producto.SalePrice = productoAct.SalePrice;
+                        producto.Stock = productoAct.Stock;
 
-                    this.context.SaveChanges();
-                }
-            });
+                        this.context.Productos.Update(productoBuscado);
+
+                        this.context.SaveChanges();
+                    }
+                });
+            }
+            else
+            {
+                productos.ForEach(p =>
+                {
+                    Producto? productoBuscado = this.context.Productos.Where(pr => pr.Id == p.Id).FirstOrDefault();
+                    ProductoDTO productoAct = ProductoMapper.MapearADTO(productoBuscado);
+                    productoAct.Stock += p.Stock;
+
+                    Producto? producto = this.context.Productos.Where(pre => pre.Id == productoAct.Id).FirstOrDefault();
+                    if (productoAct is not null)
+                    {
+                        producto.Description = productoAct.Description;
+                        producto.Cost = productoAct.Cost;
+                        producto.SalePrice = productoAct.SalePrice;
+                        producto.Stock = productoAct.Stock;
+
+                        this.context.Productos.Update(productoBuscado);
+
+                        this.context.SaveChanges();
+                    }
+                });
+            }
+        }
+
+        private void DesmarcarVendido(int ventaId) 
+        {
+            ProductoVendido productoVendAEliminar = context.ProductoVendidos.Where(p => p.SaleId == ventaId).FirstOrDefault();
+
+            if (productoVendAEliminar is not null)
+            {
+                context.ProductoVendidos.Remove(productoVendAEliminar);
+                context.SaveChanges();
+            }
         }
 
         public  bool ModificarVenta(Venta venta, int id)
@@ -125,7 +161,7 @@ namespace SistemaGestion.SistemaGestionData
 
         }
 
-        public  bool EliminarVenta(int id)
+        public  bool EliminarVenta(int id, List<ProductoDTO> productos)
         {
             Venta ventaAEliminar = context.Venta.Include(v => v.ProductoVendidos)
                     .Where(v => v.Id == id)
@@ -137,6 +173,9 @@ namespace SistemaGestion.SistemaGestionData
                context.SaveChanges();
                return true;
             }
+
+            this.DesmarcarVendido(id);
+            this.ActualizarStock(productos, 1);
 
             return false;
         }
